@@ -17,10 +17,34 @@ const AuthForm = () => {
     console.log(emailRef.current.value, passwordRef.current.value);
     const enteredEmail = emailRef.current.value;
     const enteredPassword = passwordRef.current.value;
-
+    
     setIsLoding(true);
     if (isLogin) {
-      
+      try {
+        const response = await fetch("https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDaChvkx_NS4CJiqX6UYkIpsRjZ02YeKDQ",
+          {
+            method: "POST",
+            body: JSON.stringify({
+              email: enteredEmail,
+              password: enteredPassword,
+              returnSecureToken: true,
+            }),
+            headers: {
+              'Content-Type':'application/json'
+            }
+          });
+        
+        if (response.ok) {
+         
+          const data = await response.json();
+          console.log(data);
+        } else {
+          alert('Invalid-Credentials')
+        }
+        
+      } catch (error) {
+        console.log(error);
+      }
     }
     else {
       try {
