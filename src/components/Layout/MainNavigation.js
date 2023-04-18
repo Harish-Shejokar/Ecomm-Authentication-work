@@ -7,32 +7,36 @@ import CreateAuth from '../../Store/Create-Auth';
 
 const MainNavigation = () => {
   const authCtx = useContext(CreateAuth);
-  const [login, setLogin] = useState(false);
 
   // console.log(authCtx.tokenStore);
-  useEffect(() => {
-    setLogin(authCtx.tokenStore.length !==0)
-  },)
+
 
   const logoutHandler = () => {
+    authCtx.removeTokens();
   }
 
   return (
     <header className={classes.header}>
-      <Link to='/'>
+      <Link to="/">
         <div className={classes.logo}>React Auth</div>
       </Link>
       <nav>
         <ul>
-          {!login && <li>
-            <Link to='/auth'>Login</Link>
-          </li>}
-          {login && <li>
-            <Link to='/profile'>Profile</Link>
-          </li>}
-          {login && <li>
-            <button onClick={logoutHandler}>Logout</button>
-          </li>}
+          {!authCtx.isLoggedIN && (
+            <li>
+              <Link to="/auth">Login</Link>
+            </li>
+          )}
+          {authCtx.isLoggedIN && (
+            <li>
+              <Link to="/profile">Profile</Link>
+            </li>
+          )}
+          {authCtx.isLoggedIN && (
+            <li>
+              <button onClick={logoutHandler}>Logout</button>
+            </li>
+          )}
         </ul>
       </nav>
     </header>

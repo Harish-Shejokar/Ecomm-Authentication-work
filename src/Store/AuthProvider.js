@@ -2,20 +2,19 @@
 import CreateAuth from './Create-Auth'
 import { useState } from 'react'
 const AuthProvider = (props) => {
-    const [tokens, setTokens] = useState([]);
-
+    const [tokens, setTokens] = useState(null);
+    
     const addTokenHandler = (token) => {
-        setTokens(prevToken => {
-            return [token, ...prevToken];
-        })
+        setTokens(token)
     }
     const removeTokens = () => {
-        setTokens([]);
+        setTokens(null);
     }
-    console.log(tokens);
+    const userIsLoggedIn = !!tokens;
     
     const context = {
         tokenStore: tokens,
+        isLoggedIN: userIsLoggedIn,
         addTokens: addTokenHandler,
         removeTokens : removeTokens,
     }

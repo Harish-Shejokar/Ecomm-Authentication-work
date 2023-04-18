@@ -1,7 +1,7 @@
 import React from 'react'
 
 const CreateAuth = React.createContext({
-    tokenStore : []
+    tokenStore : '',
 })
 
 export default CreateAuth

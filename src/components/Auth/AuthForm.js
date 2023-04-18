@@ -1,8 +1,10 @@
 import { useState, useRef,useContext } from "react";
 import CreateAuth from "../../Store/Create-Auth";
 import classes from "./AuthForm.module.css";
+import {useHistory} from 'react-router-dom'
 
 const AuthForm = () => {
+  const history = useHistory();
   const authCtx = useContext(CreateAuth);
   const [isLogin, setIsLogin] = useState(true);
   const [isLoading, setIsLoding] = useState(false);
@@ -48,7 +50,8 @@ const AuthForm = () => {
       if (response.ok) {
         const data = await response.json();
         authCtx.addTokens(data.idToken);
-        console.log(data);
+        history.replace('/');
+        // console.log(data);
       } else {
         alert("Invalid-Credentials");
       }
@@ -69,17 +72,13 @@ const AuthForm = () => {
           <label htmlFor="password">Your Password</label>
           <input type="password" id="password" required ref={passwordRef} />
         </div>
-        {/* <div>
-          {!isLogin && <button type='button' onClick={createAccountHandler}>
-            {}</button>}
-          {isLoading && <h3 style={{ color: 'white' }}>Sending request...</h3>}
-        </div> */}
+       
 
         <div className={classes.actions}>
-          {!isLoading && (
+          {/* {isLoading  && <p style={{ color: "white" }}>Sending request...</p>} */}
+            
             <button>{isLogin ? "Login" : "Create Account"}</button>
-          )}
-          {isLoading && <p style={{ color: "white" }}>Sending request...</p>}
+
 
           <button
             type="button"
