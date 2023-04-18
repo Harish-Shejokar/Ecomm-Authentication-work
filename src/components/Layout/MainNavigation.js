@@ -1,11 +1,12 @@
 import React, { useContext, useState, useEffect } from "react";
-import { Link } from 'react-router-dom';
+import { Link,useHistory } from 'react-router-dom';
 import classes from './MainNavigation.module.css';
 import CreateAuth from '../../Store/Create-Auth';
 
 
 
 const MainNavigation = () => {
+  const history = useHistory();
   const authCtx = useContext(CreateAuth);
 
   // console.log(authCtx.tokenStore);
@@ -13,6 +14,7 @@ const MainNavigation = () => {
 
   const logoutHandler = () => {
     authCtx.removeTokens();
+    history.replace('/auth')
   }
 
   return (

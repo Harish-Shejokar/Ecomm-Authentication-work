@@ -10,7 +10,8 @@ const AuthProvider = (props) => {
     const removeTokens = () => {
         setTokens(null);
     }
-    const userIsLoggedIn = !!tokens;
+  const userIsLoggedIn = !!tokens;
+  // console.log(tokens);
     
     const context = {
         tokenStore: tokens,
