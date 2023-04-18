@@ -1,8 +1,9 @@
-import { useState, useRef } from "react";
-
+import { useState, useRef,useContext } from "react";
+import CreateAuth from "../../Store/Create-Auth";
 import classes from "./AuthForm.module.css";
 
 const AuthForm = () => {
+  const authCtx = useContext(CreateAuth);
   const [isLogin, setIsLogin] = useState(true);
   const [isLoading, setIsLoding] = useState(false);
   const emailRef = useRef();
@@ -19,73 +20,40 @@ const AuthForm = () => {
     const enteredPassword = passwordRef.current.value;
     
     setIsLoding(true);
+    let url;
+
     if (isLogin) {
-      try {
-        const response = await fetch("https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDaChvkx_NS4CJiqX6UYkIpsRjZ02YeKDQ",
-          {
-            method: "POST",
-            body: JSON.stringify({
-              email: enteredEmail,
-              password: enteredPassword,
-              returnSecureToken: true,
-            }),
-            headers: {
-              'Content-Type':'application/json'
-            }
-          });
-        
-        if (response.ok) {
-         
-          const data = await response.json();
-          console.log(data);
-        } else {
-          alert('Invalid-Credentials')
-        }
-        
-      } catch (error) {
-        console.log(error);
-      }
+      url="https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDaChvkx_NS4CJiqX6UYkIpsRjZ02YeKDQ";
+      
     }
     else {
-      try {
-        const response = await fetch(
-          "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDaChvkx_NS4CJiqX6UYkIpsRjZ02YeKDQ",
-          {
-            method: "POST",
-            body: JSON.stringify(
-              {
-                email: enteredEmail,
-                password: enteredPassword,
-                returnSecureToken: true,
-              }),
-            headers: {
-              'Content-Type': 'application/json'
-            }
-          }
-        )
+      url = "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDaChvkx_NS4CJiqX6UYkIpsRjZ02YeKDQ";
+    }
+    
+    try {
+      const response = await fetch(url,
+        {
+          method: "POST",
+          body: JSON.stringify({
+            email: enteredEmail,
+            password: enteredPassword,
+            returnSecureToken: true,
+          }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
-        if (response.ok) {
-          // console.log('success');
-        }
-        else {
-          const res = await response.json();
-          const errorMessage = "Authentication-Failed";
-          alert(errorMessage);
-          // console.log(res);
-        }
-      } catch (err) {
-        console.log(err);
+      if (response.ok) {
+        const data = await response.json();
+        authCtx.addTokens(data.idToken);
+        console.log(data);
+      } else {
+        alert("Invalid-Credentials");
       }
-        
-      //   .then(res => {
-      //   if (res.ok) {
-      //     console.log('ok')
-      //   } else {
-      //     return res.json().then(data => {
-      //       console.log(data);
-      //     })
-      //   }
-      // })
+    } catch (error) {
+      console.log(error);
     }
   }
 
