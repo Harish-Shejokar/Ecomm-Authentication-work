@@ -1,36 +1,45 @@
-
-import CreateAuth from './Create-Auth'
-import { useEffect, useState } from 'react'
+import CreateAuth from "./Create-Auth";
+import { useEffect, useState } from "react";
 const AuthProvider = (props) => {
-  const [tokens, setTokens] = useState(null);
-  useEffect(() => {
-    if (tokens === null || localStorage.getItem("token") !== null)
-      setTokens(localStorage.getItem("token"));
-  },[tokens])
+  const intialToken = localStorage.getItem("token");
+  const [tokens, setTokens] = useState(intialToken);
+  const [intervalID, setIntervalId] = useState(null);
   
-    
-    const addTokenHandler = (token) => {
-      setTokens(token)
-      localStorage.setItem('token', token);
+  useEffect(() => {
+    if (tokens !== null) {
+     const Id = setInterval(() => {
+        autoLogOut();
+     }, 10000);
+      // setIntervalId(Id);
     }
+  });
+
+  const autoLogOut = () => {
+    console.log('logout')
+    removeTokens();
+  };
+
+  const addTokenHandler = (token) => {
+    setTokens(token);
+    localStorage.setItem("token", token);
+  };
   const removeTokens = () => {
-        localStorage.removeItem('token');
-        setTokens(null);
-    }
+    // clearInterval(intervalID)
+    setTokens(null);
+    localStorage.removeItem("token");
+  };
   const userIsLoggedIn = !!tokens;
   // console.log(tokens);
-    
-    const context = {
-        tokenStore: tokens,
-        isLoggedIN: userIsLoggedIn,
-        addTokens: addTokenHandler,
-        removeTokens : removeTokens,
-    }
+
+  const context = {
+    tokenStore: tokens,
+    isLoggedIN: userIsLoggedIn,
+    addTokens: addTokenHandler,
+    removeTokens: removeTokens,
+  };
   return (
-    <CreateAuth.Provider value={context}>
-      {props.children}
-    </CreateAuth.Provider>
-  )
-}
+    <CreateAuth.Provider value={context}>{props.children}</CreateAuth.Provider>
+  );
+};
 
 export default AuthProvider;
